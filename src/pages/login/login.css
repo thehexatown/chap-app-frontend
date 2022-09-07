@@ -1,0 +1,35 @@
+.main{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   margin-top: 100px;
+  
+
+}
+.Loginform{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px; 
+    width: 100px;
+  
+ 
+ }
+ .Loginform > input{
+    margin-bottom: 25px;
+    width: 400px;
+  
+ 
+ }
+ .Loginform > button{
+    background-color: blue;
+    color: aliceblue;
+    cursor: pointer;
+    height: 100px;
+    width: 100px;
+    padding: 10px;
+    border-radius: 50px;
+ 
+ }

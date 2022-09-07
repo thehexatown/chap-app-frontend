@@ -1,0 +1,78 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  width: 387px;
+  border: 1px solid #e7e7e7;
+  padding: 18px 27px 18px 31px;
+  border-radius: 15px;
+  overflow-y: scroll;
+  height: 100vh;
+  margin-right: 21px;
+}
+.container::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.search > input {
+  width: 331px;
+  height: 51px;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  outline: none;
+  margin: 31px 27px 37px 29px;
+  padding: 0px 0px 0px 17px;
+}
+.search > input::placeholder {
+  color: #c9c9c9;
+}
+
+.conversation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-direction: row;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 69px;
+  width: 100%;
+  border-bottom: 1px solid #ececec;
+}
+.conversationName {
+  font-weight: 500;
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 16px;
+  color: #000000;
+}
+.conversationTyping {
+  font-family: "Roboto";
+  margin-top: 7px;
+  font-weight: 400;
+  font-size: 14px;
+
+  color: rgba(0, 0, 0, 0.7);
+}
+.conversationLeft {
+  display: flex;
+}
+.conversationImg {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+.conversationRight p {
+  font-family: "Roboto";
+  font-weight: 500;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+  .conversationName {
+    display: none;
+  }
+}
