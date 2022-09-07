@@ -14,7 +14,9 @@
 .container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
-
+.search {
+  position: relative;
+}
 .search > input {
   width: 331px;
   height: 51px;
@@ -26,6 +28,13 @@
 }
 .search > input::placeholder {
   color: #c9c9c9;
+}
+.searchicon {
+  left: 19%;
+  top: 179px;
+  width: 15.5px;
+  height: 15.5px;
+  position: absolute;
 }
 
 .conversation {
