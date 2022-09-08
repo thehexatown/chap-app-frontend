@@ -1,17 +1,19 @@
-import "./login.css";
+import "./signUp.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { SpinnerCircular } from "spinners-react";
 import RequestUrl from "../../config/apiUrl";
-import { SignIn } from "../../../src/features/authSlice";
+import { SpinnerCircular } from "spinners-react";
 
-const Login = () => {
+import { SignIn } from "../../features/authSlice";
+
+const SignUp = () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const [work_email, setwork_email] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [validated, setValidated] = useState(false);
@@ -28,15 +30,15 @@ const Login = () => {
       setLoading(true);
       try {
         await axios
-          .post(RequestUrl + "/api/auth/login", {
+          .post(RequestUrl + "/api/auth/register", {
+            name,
             work_email,
             password,
           })
           .then((res) => {
+            console.log(res.data);
             setLoading(false);
-            dispatch(SignIn(res.data.user));
-
-            navigate("/messenger");
+            navigate("/");
           })
           .catch((error) => {
             setLoading(false);
@@ -47,18 +49,24 @@ const Login = () => {
       }
     }
   };
-  const navigateToSignUp = () => {
-    navigate("/signUp");
+
+  const navigateToLogin = () => {
+    navigate("/");
   };
+
   return (
     <>
       <div className="container">
-        <div className="Login">
+        <div className="SignUp">
           <div className="brand">
             {/* <img src="/icons/brand.svg" /> */}
-            <h2>Chat App Login</h2>
+            <h2>Chat App Sign Up</h2>
           </div>
-          <div className="loginFOrm">
+          <div className="SignUpFOrm">
+            <div className="input">
+              <label>Name</label>
+              <input type="text" onChange={(e) => setName(e.target.value)} />
+            </div>
             <div className="input">
               <label>Email Address</label>
               <input
@@ -78,14 +86,14 @@ const Login = () => {
               {loading == true ? (
                 <SpinnerCircular size="30" color="white" />
               ) : (
-                "Login"
+                "SignUp"
               )}
             </button>
           </div>
-          <div className="signUpLink">
+          <div className="loginLink">
             <p>
-              Don’t have an account?
-              <span onClick={navigateToSignUp}>Sign up</span>
+              Already have an account?
+              <span onClick={navigateToLogin}>Login</span>
             </p>
           </div>
         </div>
@@ -94,4 +102,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

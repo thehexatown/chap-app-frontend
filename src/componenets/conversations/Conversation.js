@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import SocketContext from "../../context/socketContext";
 import { conversationMock } from "../../mock/conversation";
+import RequestUrl from "../../config/apiUrl";
 import "./conversation.css";
 
 export default function Conversation({
@@ -20,12 +21,10 @@ export default function Conversation({
 
   useEffect(() => {
     const friendId = conversation?.members.find((m) => m !== currentUser._id);
-    // socket.emit("allConversations", friendId);
-    const getUser = async () => {
-      // for (let i=0; i<conversation)
 
+    const getUser = async () => {
       try {
-        await axios(`http://localhost:5000/api/auth/${friendId}`)
+        await axios(RequestUrl + `/api/auth/${friendId}`)
           .then((res) => {
             setUser(res.data);
           })

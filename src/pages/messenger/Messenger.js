@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Message from "../../componenets/message/Message";
 import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
+import RequestUrl from "../../config/apiUrl";
 import SocketContext from "../../context/socketContext";
 
 export default function Messenger() {
@@ -62,7 +63,7 @@ export default function Messenger() {
     const getMessages = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/messages/" + currentChat?._id
+          RequestUrl + "/api/messages/" + currentChat?._id
         );
         setMessages(res.data);
       } catch (err) {
@@ -81,7 +82,7 @@ export default function Messenger() {
   const getConversations = async () => {
     try {
       await axios
-        .get(`http://localhost:5000/api/conversations/${user._id}`)
+        .get(RequestUrl + `/api/conversations/${user._id}`)
         .then((res) => {
           setConversations(res.data);
         })
