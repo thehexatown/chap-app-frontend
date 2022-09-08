@@ -1,7 +1,14 @@
 import "./message.css";
 import { format } from "timeago.js";
+import axios from "axios";
+import { useEffect, useState, useContext } from "react";
 
-export default function Message({ message, own }) {
+export default function Message({ message, own, currentChat, currentUser }) {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    // getUser();
+  }, []);
+
   return (
     <div className={own ? "message own" : "message"}>
       <div className="messageTop">
