@@ -2,8 +2,6 @@ import "./messenger.css";
 import Conversation from "../../componenets/conversations/Conversation";
 import { useSelector } from "react-redux";
 import Message from "../../componenets/message/Message";
-
-import { messageMock } from "../../mock/message";
 import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
 import SocketContext from "../../context/socketContext";
@@ -218,52 +216,57 @@ export default function Messenger() {
               {!search && <img className="searchicon" src={"search.svg"} />}
             </div>
             <div className="peopleContainer">
-              {people?.length > 0 ? (
+              {people ? (
                 <>
                   <div className="peopleBorder">People</div>
-                  {people.map((friend) => {
-                    return (
-                      <>
-                        <div
-                          className="conversation"
-                          onClick={() => handleClick(friend)}
-                        >
-                          <div className="conversationLeft">
-                            <img
-                              className="conversationImg"
-                              src={"Ellipse 1.svg"}
-                              alt=""
-                            />
-                            <div className="conversationDetails">
-                              <p className="conversationName">{friend.name}</p>
-                              <p className="conversationTyping">Typing..</p>
+                  {people.length > 0 ? (
+                    people.map((friend) => {
+                      return (
+                        <>
+                          <div
+                            className="conversation"
+                            onClick={() => handleClick(friend)}
+                          >
+                            <div className="conversationLeft">
+                              <img
+                                className="conversationImg"
+                                src={"Ellipse 1.svg"}
+                                alt=""
+                              />
+                              <div className="conversationDetails">
+                                <p className="conversationName">
+                                  {friend.name}
+                                </p>
+                                {/* <p className="conversationTyping">Typing..</p> */}
+                              </div>
+                            </div>
+                            <div className="conversationRight">
+                              {/* <p>12:30 pm</p> */}
                             </div>
                           </div>
-                          <div className="conversationRight">
-                            <p>12:30 pm</p>
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })}
-                  <div className="conversationBorder">conversations</div>
+                        </>
+                      );
+                    })
+                  ) : (
+                    <div className="peopleNotFound">No people Found</div>
+                  )}
                 </>
               ) : (
-                ""
+                <>
+                  {conversations.map((c) => {
+                    return (
+                      <Conversation
+                        people={people}
+                        setConversations={setConversations}
+                        currentId={user._id}
+                        setCurrentChat={setCurrentChat}
+                        conversation={c}
+                        currentUser={user}
+                      />
+                    );
+                  })}
+                </>
               )}
-
-              {conversations.map((c) => {
-                return (
-                  <Conversation
-                    people={people}
-                    setConversations={setConversations}
-                    currentId={user._id}
-                    setCurrentChat={setCurrentChat}
-                    conversation={c}
-                    currentUser={user}
-                  />
-                );
-              })}
             </div>
           </div>
           {currentChat ? (
@@ -277,7 +280,6 @@ export default function Messenger() {
                   />
                   <div className="conversationDetails">
                     <p className="conversationName">{currentChatUser?.name}</p>
-                    {/* <p className="conversationTyping">Typing...</p> */}
                   </div>
                 </div>
                 <div className="chatTopRight">

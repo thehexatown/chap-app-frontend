@@ -7,6 +7,27 @@
   display: flex;
   flex-direction: column;
 }
+.peopleNotFound {
+  height: 30px;
+  font-size: 15px;
+  margin: 15px 0px 15px 15px;
+}
+.peopleBorder {
+  height: 30px;
+  font-size: 20px;
+  background-color: #f3f3f3;
+  text-align: center;
+  padding: 5px;
+  margin: 0;
+}
+.conversationBorder {
+  height: 30px;
+  font-size: 20px;
+  background-color: #f3f3f3;
+  text-align: center;
+  padding: 5px;
+  margin: 0;
+}
 .chatMenuWrapper {
   display: flex;
   flex-direction: row;
