@@ -114,15 +114,17 @@
   position: absolute;
   right: 3%;
   width: 200px;
+  padding-right: 17px;
   display: flex;
   justify-content: space-evenly;
 }
 
 .chatMessageInput {
   width: 100%;
+  box-sizing: border-box;
   height: 64px;
   margin: 34px;
-  padding-top: 30px;
+  padding-top: 23px;
   padding-left: 30px;
   background: #f4f4f4;
   border: 1px solid #d8d8d8;
@@ -142,10 +144,11 @@
   flex: 3;
 }
 
-.noConversationText {
-  position: absolute;
-  top: 10%;
-  font-size: 50px;
+.openChat > p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
   color: rgb(224, 220, 220);
   cursor: default;
 }

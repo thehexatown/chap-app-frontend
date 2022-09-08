@@ -2,7 +2,7 @@ import "./messenger.css";
 import Conversation from "../../componenets/conversations/Conversation";
 import { useSelector } from "react-redux";
 import Message from "../../componenets/message/Message";
-import ChatOnline from "../../componenets/chatOnline/ChatOnline";
+
 import { messageMock } from "../../mock/message";
 import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
@@ -16,10 +16,10 @@ export default function Messenger() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
 
   const scrollRef = useRef();
   useEffect(() => {
+    console.log("conversation", conversations);
     socket.on("getMessage", (data) => {
       console.log("message", data);
       setArrivalMessage({
@@ -44,7 +44,7 @@ export default function Messenger() {
     socket.emit("addUser", user._id);
     socket.on("getUsers", (users) => {
       console.log("users", users);
-      setOnlineUsers(users);
+      // setOnlineUsers(users);
     });
 
     return () => {
@@ -57,10 +57,15 @@ export default function Messenger() {
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/conversations/${user._id}`
-        );
-        setConversations(res.data);
+        await axios
+          .get(`http://localhost:5000/api/conversations/${user._id}`)
+          .then((res) => {
+            console.log("convo", res);
+            setConversations(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } catch (err) {
         console.log(err);
       }
@@ -126,19 +131,22 @@ export default function Messenger() {
         </div>
         <div className="chatMenuWrapper">
           <div>
-            {/* {conversations.map((c) => ( */}
-            {/* onClick={() => setCurrentChat(c)} */}
-            {/* conversation={c} currentUser={user} */}
-            {/* <div> */}
-            <Conversation />
-            {/* </div> */}
-            {/* ))} */}
-            {/* </div> */}
+            {/* {conversations.map((c) => { */}
+            <div
+            // onClick={() => setCurrentChat(c)}
+            >
+              <Conversation
+                setConversations={setConversations}
+                currentId={user._id}
+                setCurrentChat={setCurrentChat}
+                conversation={conversations}
+                currentUser={user}
+              />
+            </div>
+            ;{/* })} */}
           </div>
-          <div className="chatBox">
-            {/* <div className="chatBoxWrapper"> */}
-            {/* {currentChat ? ( */}
-            <>
+          {currentChat ? (
+            <div className="chatBox">
               <div className="chatBoxTop">
                 <div className="chatTopLeft">
                   <img
@@ -177,24 +185,12 @@ export default function Messenger() {
                   <img src="/bi_send-fill.svg" />
                 </div>
               </div>
-            </>
-            {/* ) : ( */}
-            {/* <span className="noConversationText">
-                Open a conversation to start a chat.
-              </span>
-            )} */}
-            {/* </div> */}
-            {/* </div> */}
-            {/* <div className="chatOnline">
-          <div className="chatOnlineWrapper">
-            <ChatOnline
-              onlineUsers={onlineUsers}
-              setConversations={setConversations}
-              currentId={user._id}
-              setCurrentChat={setCurrentChat}
-            />
-          </div>*/}
-          </div>
+            </div>
+          ) : (
+            <div className="openChat">
+              <p>Open Conversation to message</p>
+            </div>
+          )}
         </div>
       </div>
     </>

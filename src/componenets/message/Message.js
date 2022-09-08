@@ -11,9 +11,11 @@ export default function Message({ message, own }) {
           alt=""
         />
         <div>
-          <p className="messageText">{message.text}</p>
+          <div className="messageWrap">
+            <p className="messageText">{message.text}</p>
+          </div>
+          <div className="messageBottom">{format(message.createdAt)}</div>
         </div>
-        <div className="messageBottom">{format(message.createdAt)}</div>
       </div>
     </div>
   );
