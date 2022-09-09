@@ -196,6 +196,7 @@ export default function Messenger() {
     }
   };
   const removeTyping = () => {
+    console.log("here in remove");
     const receiverId = currentChat.members.find(
       (member) => member !== user._id
     );
@@ -203,6 +204,7 @@ export default function Messenger() {
   };
 
   const Typing = () => {
+    console.log("onFocus");
     const receiverId = currentChat.members.find(
       (member) => member !== user._id
     );
@@ -293,8 +295,16 @@ export default function Messenger() {
                     src={"Ellipse 1.svg"}
                     alt=""
                   />
-                  <div className="conversationDetails">
-                    <p className="conversationName">{currentChatUser?.name}</p>
+                  <div
+                    className={
+                      typing
+                        ? "conversationDetails"
+                        : "conversationDetailsTyping"
+                    }
+                  >
+                    <p className={"conversationName"}>
+                      {currentChatUser?.name}
+                    </p>
                     {typing && <p className="conversationTyping">Typing...</p>}
                   </div>
                 </div>
@@ -318,7 +328,7 @@ export default function Messenger() {
                 <input
                   className="chatMessageInput"
                   placeholder="write something..."
-                  onfocusout={removeTyping}
+                  onBlur={removeTyping}
                   onFocus={Typing}
                   onChange={(e) => setNewMessage(e.target.value)}
                   value={newMessage}

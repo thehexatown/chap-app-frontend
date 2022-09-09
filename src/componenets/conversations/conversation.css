@@ -29,7 +29,9 @@
 
   color: rgba(0, 0, 0, 0.7);
 }
+
 .conversationLeft {
+  align-items: center;
   display: flex;
 }
 .conversationImg {

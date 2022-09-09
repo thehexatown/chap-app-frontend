@@ -56,7 +56,7 @@ export default function Conversation({
           />
           <div className="conversationDetails">
             <p className="conversationName">{user?.name}</p>
-            <p className="conversationTyping">Typing..</p>
+            {/* <p className="conversationTyping">Typing..</p> */}
           </div>
         </div>
         <div className="conversationRight">

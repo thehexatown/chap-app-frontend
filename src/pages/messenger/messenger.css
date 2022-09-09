@@ -3,9 +3,12 @@
   padding: 0;
 }
 .messenger {
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  margin-top: 40px;
+  margin-bottom: 30px;
 }
 .chatbody {
   max-height: 500px;
@@ -36,10 +39,11 @@
   margin: 0;
 }
 .chatMenuWrapper {
+  height: 850px;
   display: flex;
   flex-direction: row;
   margin: 25px 34px 0px 33px;
-  padding-bottom: 42px;
+  /* padding-bottom: 42px; */
 }
 .conversationContainer {
   width: 387px;
@@ -48,7 +52,7 @@
   padding: 30px;
   border-radius: 15px;
   overflow-y: scroll;
-  height: 780px;
+
   margin-right: 21px;
 }
 .conversationContainer::-webkit-scrollbar {
@@ -110,7 +114,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
   border-radius: 15px;
   padding: 0px 24px;
@@ -151,6 +155,13 @@
   font-weight: bold;
   font-size: 16px;
   color: #000000;
+}
+input[type="search"] > button {
+  background: red;
+  line-height: 3;
+}
+.conversationDetailsTyping {
+  align-self: center;
 }
 .conversationDetails .conversationTyping {
   font-family: "Roboto";
