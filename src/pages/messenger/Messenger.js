@@ -2,10 +2,9 @@ import "./messenger.css";
 import Conversation from "../../componenets/conversations/Conversation";
 import { useSelector } from "react-redux";
 import Message from "../../componenets/message/Message";
-
-import { messageMock } from "../../mock/message";
 import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
+import RequestUrl from "../../config/apiUrl";
 import SocketContext from "../../context/socketContext";
 
 export default function Messenger() {
@@ -17,6 +16,7 @@ export default function Messenger() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [search, setSearch] = useState("");
+  const [typing, setTyping] = useState(false);
   const [people, setPeople] = useState(null);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
@@ -57,6 +57,12 @@ export default function Messenger() {
   }, []);
 
   useEffect(() => {
+    socket.on("getTyping", (data) => {
+      setTyping(data);
+    });
+    socket.on("getRemoveTyping", (data) => {
+      setTyping(data);
+    });
     getConversations();
   }, []);
 
@@ -64,7 +70,7 @@ export default function Messenger() {
     const getMessages = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/messages/" + currentChat?._id
+          RequestUrl + "/api/messages/" + currentChat?._id
         );
         setMessages(res.data);
       } catch (err) {
@@ -83,7 +89,7 @@ export default function Messenger() {
   const getConversations = async () => {
     try {
       await axios
-        .get(`http://localhost:5000/api/conversations/${user._id}`)
+        .get(RequestUrl + `/api/conversations/${user._id}`)
         .then((res) => {
           setConversations(res.data);
         })
@@ -98,7 +104,7 @@ export default function Messenger() {
     const friendId = currentChat?.members.find((m) => m !== user._id);
 
     try {
-      await axios(`http://localhost:5000/api/auth/${friendId}`)
+      await axios(RequestUrl + `/api/auth/${friendId}`)
         .then((res) => {
           setCurrentChatUser(res.data);
         })
@@ -113,9 +119,7 @@ export default function Messenger() {
   const handleClick = async (friend) => {
     try {
       await axios
-        .get(
-          `http://localhost:5000/api/conversations/find/${user._id}/${friend._id}`
-        )
+        .get(RequestUrl + `/api/conversations/find/${user._id}/${friend._id}`)
         .then(({ data }) => {
           if (data) {
             setCurrentChat(data);
@@ -125,13 +129,13 @@ export default function Messenger() {
               receiverId: friend._id,
             };
             axios
-              .post(`http://localhost:5000/api/conversations/create`, data)
+              .post(RequestUrl + `/api/conversations/create`, data)
               .then(({ data }) => {
                 setCurrentChat(data);
               })
               .then(() => {
                 axios
-                  .get(`http://localhost:5000/api/conversations/${user._id}`)
+                  .get(RequestUrl + `/api/conversations/${user._id}`)
                   .then((res) => {
                     setConversations(res.data);
                   })
@@ -150,7 +154,7 @@ export default function Messenger() {
   };
   const searchPeople = async () => {
     await axios
-      .get(`http://localhost:5000/api/users/search?search=${search}`)
+      .get(RequestUrl + `/api/users/search?search=${search}`)
       .then((res) => {
         let people = res.data;
         for (let i = 0; i < people.length; i++) {
@@ -184,17 +188,26 @@ export default function Messenger() {
     });
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/messages",
-        message
-      );
+      const res = await axios.post(RequestUrl + "/api/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {
       console.log(err);
     }
   };
+  const removeTyping = () => {
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+    socket.emit("removeTyping", receiverId);
+  };
 
+  const Typing = () => {
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+    socket.emit("Typing", receiverId);
+  };
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -218,52 +231,57 @@ export default function Messenger() {
               {!search && <img className="searchicon" src={"search.svg"} />}
             </div>
             <div className="peopleContainer">
-              {people?.length > 0 ? (
+              {people ? (
                 <>
                   <div className="peopleBorder">People</div>
-                  {people.map((friend) => {
-                    return (
-                      <>
-                        <div
-                          className="conversation"
-                          onClick={() => handleClick(friend)}
-                        >
-                          <div className="conversationLeft">
-                            <img
-                              className="conversationImg"
-                              src={"Ellipse 1.svg"}
-                              alt=""
-                            />
-                            <div className="conversationDetails">
-                              <p className="conversationName">{friend.name}</p>
-                              <p className="conversationTyping">Typing..</p>
+                  {people.length > 0 ? (
+                    people.map((friend) => {
+                      return (
+                        <>
+                          <div
+                            className="conversation"
+                            onClick={() => handleClick(friend)}
+                          >
+                            <div className="conversationLeft">
+                              <img
+                                className="conversationImg"
+                                src={"Ellipse 1.svg"}
+                                alt=""
+                              />
+                              <div className="conversationDetails">
+                                <p className="conversationName">
+                                  {friend.name}
+                                </p>
+                                {/* <p className="conversationTyping">Typing..</p> */}
+                              </div>
+                            </div>
+                            <div className="conversationRight">
+                              {/* <p>12:30 pm</p> */}
                             </div>
                           </div>
-                          <div className="conversationRight">
-                            <p>12:30 pm</p>
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })}
-                  <div className="conversationBorder">conversations</div>
+                        </>
+                      );
+                    })
+                  ) : (
+                    <div className="peopleNotFound">No people Found</div>
+                  )}
                 </>
               ) : (
-                ""
+                <>
+                  {conversations.map((c) => {
+                    return (
+                      <Conversation
+                        people={people}
+                        setConversations={setConversations}
+                        currentId={user._id}
+                        setCurrentChat={setCurrentChat}
+                        conversation={c}
+                        currentUser={user}
+                      />
+                    );
+                  })}
+                </>
               )}
-
-              {conversations.map((c) => {
-                return (
-                  <Conversation
-                    people={people}
-                    setConversations={setConversations}
-                    currentId={user._id}
-                    setCurrentChat={setCurrentChat}
-                    conversation={c}
-                    currentUser={user}
-                  />
-                );
-              })}
             </div>
           </div>
           {currentChat ? (
@@ -277,7 +295,7 @@ export default function Messenger() {
                   />
                   <div className="conversationDetails">
                     <p className="conversationName">{currentChatUser?.name}</p>
-                    {/* <p className="conversationTyping">Typing...</p> */}
+                    {typing && <p className="conversationTyping">Typing...</p>}
                   </div>
                 </div>
                 <div className="chatTopRight">
@@ -300,6 +318,8 @@ export default function Messenger() {
                 <input
                   className="chatMessageInput"
                   placeholder="write something..."
+                  onfocusout={removeTyping}
+                  onFocus={Typing}
                   onChange={(e) => setNewMessage(e.target.value)}
                   value={newMessage}
                 />

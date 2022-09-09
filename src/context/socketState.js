@@ -1,8 +1,8 @@
 import React from "react";
 import SocketContext from "./socketContext";
-
+import RequestUrl from "../config/apiUrl";
 import io from "socket.io-client";
-const socket = io("http://localhost:5000");
+const socket = io(RequestUrl);
 
 function SocketState(props) {
   const connection = socket;

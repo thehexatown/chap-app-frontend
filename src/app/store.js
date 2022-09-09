@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../../src/features/authSlice";
-import socketReducer from "../../src/features/socketSlice";
+
 import { combineReducers } from "redux";
 import {
   persistReducer,
@@ -18,7 +18,6 @@ const persistConfig = {
   storage,
 };
 const persistedUserReducer = persistReducer(persistConfig, authReducer);
-const persistedSocketReducer = persistReducer(persistConfig, socketReducer);
 
 export default configureStore({
   reducer: { auth: persistedUserReducer },
