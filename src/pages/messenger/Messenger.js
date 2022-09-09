@@ -16,6 +16,7 @@ export default function Messenger() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [search, setSearch] = useState("");
+  const [typing, setTyping] = useState(false);
   const [people, setPeople] = useState(null);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
@@ -56,6 +57,12 @@ export default function Messenger() {
   }, []);
 
   useEffect(() => {
+    socket.on("getTyping", (data) => {
+      setTyping(data);
+    });
+    socket.on("getRemoveTyping", (data) => {
+      setTyping(data);
+    });
     getConversations();
   }, []);
 
@@ -97,7 +104,7 @@ export default function Messenger() {
     const friendId = currentChat?.members.find((m) => m !== user._id);
 
     try {
-      await axios(`http://localhost:5000/api/auth/${friendId}`)
+      await axios(RequestUrl + `/api/auth/${friendId}`)
         .then((res) => {
           setCurrentChatUser(res.data);
         })
@@ -112,9 +119,7 @@ export default function Messenger() {
   const handleClick = async (friend) => {
     try {
       await axios
-        .get(
-          `http://localhost:5000/api/conversations/find/${user._id}/${friend._id}`
-        )
+        .get(RequestUrl + `/api/conversations/find/${user._id}/${friend._id}`)
         .then(({ data }) => {
           if (data) {
             setCurrentChat(data);
@@ -124,13 +129,13 @@ export default function Messenger() {
               receiverId: friend._id,
             };
             axios
-              .post(`http://localhost:5000/api/conversations/create`, data)
+              .post(RequestUrl + `/api/conversations/create`, data)
               .then(({ data }) => {
                 setCurrentChat(data);
               })
               .then(() => {
                 axios
-                  .get(`http://localhost:5000/api/conversations/${user._id}`)
+                  .get(RequestUrl + `/api/conversations/${user._id}`)
                   .then((res) => {
                     setConversations(res.data);
                   })
@@ -149,7 +154,7 @@ export default function Messenger() {
   };
   const searchPeople = async () => {
     await axios
-      .get(`http://localhost:5000/api/users/search?search=${search}`)
+      .get(RequestUrl + `/api/users/search?search=${search}`)
       .then((res) => {
         let people = res.data;
         for (let i = 0; i < people.length; i++) {
@@ -183,17 +188,26 @@ export default function Messenger() {
     });
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/messages",
-        message
-      );
+      const res = await axios.post(RequestUrl + "/api/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {
       console.log(err);
     }
   };
+  const removeTyping = () => {
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+    socket.emit("removeTyping", receiverId);
+  };
 
+  const Typing = () => {
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+    socket.emit("Typing", receiverId);
+  };
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -281,6 +295,7 @@ export default function Messenger() {
                   />
                   <div className="conversationDetails">
                     <p className="conversationName">{currentChatUser?.name}</p>
+                    {typing && <p className="conversationTyping">Typing...</p>}
                   </div>
                 </div>
                 <div className="chatTopRight">
@@ -303,6 +318,8 @@ export default function Messenger() {
                 <input
                   className="chatMessageInput"
                   placeholder="write something..."
+                  onfocusout={removeTyping}
+                  onFocus={Typing}
                   onChange={(e) => setNewMessage(e.target.value)}
                   value={newMessage}
                 />

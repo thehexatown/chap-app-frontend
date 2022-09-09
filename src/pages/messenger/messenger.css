@@ -145,20 +145,20 @@
   border-radius: 50%;
   object-fit: cover;
 }
-.conversationName {
+.conversationDetails .conversationName {
   font-weight: 500;
   font-family: "Roboto";
   font-weight: bold;
   font-size: 16px;
   color: #000000;
 }
-.conversationTyping {
+.conversationDetails .conversationTyping {
   font-family: "Roboto";
-  margin-top: 7px;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
+  letter-spacing: -0.01em;
 
-  color: rgba(0, 0, 0, 0.7);
+  color: #2ad300;
 }
 
 .chatBoxBottom {
