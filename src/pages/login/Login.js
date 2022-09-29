@@ -56,7 +56,7 @@ const Login = () => {
         <div className="Login">
           <div className="brand">
             {/* <img src="/icons/brand.svg" /> */}
-            <h2>Chat App Login</h2>
+            <h2>Chat Login</h2>
           </div>
           <div className="loginFOrm">
             <div className="input">
